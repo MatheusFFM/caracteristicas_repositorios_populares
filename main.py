@@ -11,6 +11,12 @@ def run_query(query):
         raise Exception("Query failed to run by returning code of {}. {}".format(request.status_code, query))
 
 
+def print_query_result(query_result):
+    result_format = query_result["data"]["search"]["nodes"]
+    for rf in result_format:
+        print(rf)
+
+
 defaultQuery = """
 {
   search(query:"stars", type:REPOSITORY, first:100){
@@ -23,9 +29,9 @@ defaultQuery = """
 }
 """
 
-queryOldRepositories  = """
+queryOldRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -38,7 +44,7 @@ queryOldRepositories  = """
 
 queryContributionsRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -53,7 +59,7 @@ queryContributionsRepositories = """
 
 queryReleasesRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -68,7 +74,7 @@ queryReleasesRepositories = """
 
 queryReleasesRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -83,7 +89,7 @@ queryReleasesRepositories = """
 
 queryLastUpdateRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
   nodes {
       ... on Repository {
         nameWithOwner
@@ -96,7 +102,7 @@ queryLastUpdateRepositories = """
 
 queryPrimaryLanguageRepositories = """
 {
-  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  search(query: "stars", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -109,62 +115,42 @@ queryPrimaryLanguageRepositories = """
 }
 """
 
-#Get created date of popular repositories.
-result = run_query(queryOldRepositories)
+queryPrimaryLanguageRepositories = """
+{
+  search(query: "stars", type: REPOSITORY, first: 100) {
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        primaryLanguage{
+          name
+        }
+      }
+    }
+  }
+}
+"""
 
-Repository = result["data"]["search"]["nodes"]
+# Get created date of popular repositories.
 print("Repositories with its created date.")
-for date in Repository: 
-  print(date)
+print_query_result(run_query(queryOldRepositories))
+print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
-print("")
-print("///////////////////////////////////////////////////////////////////////////////////////////")
-print("")
-
-#Get total pull requests of popular repositories.
-result = run_query(queryContributionsRepositories)
-
-Repository = result["data"]["search"]["nodes"]
+# Get total pull requests of popular repositories.
 print("Repositories with number of pull requests")
-for date in Repository:
-  print(date)
+print_query_result(run_query(queryContributionsRepositories))
+print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
-print("")
-print("///////////////////////////////////////////////////////////////////////////////////////////")
-print("")
-
-#Get total releases of popular repositories.
-result = run_query(queryReleasesRepositories)
-
-Repository = result["data"]["search"]["nodes"]
+# Get total releases of popular repositories.
 print("Repositories with number of releases")
-for date in Repository:
-  print(date)
+print_query_result(run_query(queryReleasesRepositories))
+print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
-print("")
-print("///////////////////////////////////////////////////////////////////////////////////////////")
-print("")
+# Get last update of popular repositories.
+print("Repositories with last update date")
+print_query_result(run_query(queryLastUpdateRepositories))
+print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
-#Get last update of popular repositories.
-result = run_query(queryLastUpdateRepositories)
-
-Repository = result["data"]["search"]["nodes"]
-print("Repositories with number of releases")
-for date in Repository:
-  print(date)
-
-print("")
-print("///////////////////////////////////////////////////////////////////////////////////////////")
-print("")
-
-#Get primary language of popular repositories.
-result = run_query(queryPrimaryLanguageRepositories)
-
-Repository = result["data"]["search"]["nodes"]
-print("Repositories with number of releases")
-for date in Repository:
-  print(date)
-
-
-
-
+# Get primary language of popular repositories.
+print("Repositories with primary language")
+print_query_result(run_query(queryPrimaryLanguageRepositories))
+print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
