@@ -1,6 +1,6 @@
 import requests
 
-headers = {"Authorization": "bearer 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"}
+headers = {"Authorization": "bearer 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"}
 
 
 def run_query(query):
@@ -23,9 +23,9 @@ defaultQuery = """
 }
 """
 
-queryOldRepositories = """
+queryOldRepositories  = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -51,5 +51,120 @@ queryContributionsRepositories = """
 }
 """
 
+queryReleasesRepositories = """
+{
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        releases{
+          totalCount
+        }
+      }
+    }
+  }
+}
+"""
+
+queryReleasesRepositories = """
+{
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        releases{
+          totalCount
+        }
+      }
+    }
+  }
+}
+"""
+
+queryLastUpdateRepositories = """
+{
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+  nodes {
+      ... on Repository {
+        nameWithOwner
+        updatedAt
+      }
+    }
+  }
+}
+"""
+
+queryPrimaryLanguageRepositories = """
+{
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
+    nodes {
+      ... on Repository {
+        nameWithOwner
+        primaryLanguage{
+          name
+        }
+      }
+    }
+  }
+}
+"""
+
+#Get created date of popular repositories.
 result = run_query(queryOldRepositories)
-print(f"Remaining rate limit - {result}")
+
+Repository = result["data"]["search"]["nodes"]
+print("Repositories with its created date.")
+for date in Repository: 
+  print(date)
+
+print("")
+print("///////////////////////////////////////////////////////////////////////////////////////////")
+print("")
+
+#Get total pull requests of popular repositories.
+result = run_query(queryContributionsRepositories)
+
+Repository = result["data"]["search"]["nodes"]
+print("Repositories with number of pull requests")
+for date in Repository:
+  print(date)
+
+print("")
+print("///////////////////////////////////////////////////////////////////////////////////////////")
+print("")
+
+#Get total releases of popular repositories.
+result = run_query(queryReleasesRepositories)
+
+Repository = result["data"]["search"]["nodes"]
+print("Repositories with number of releases")
+for date in Repository:
+  print(date)
+
+print("")
+print("///////////////////////////////////////////////////////////////////////////////////////////")
+print("")
+
+#Get last update of popular repositories.
+result = run_query(queryLastUpdateRepositories)
+
+Repository = result["data"]["search"]["nodes"]
+print("Repositories with number of releases")
+for date in Repository:
+  print(date)
+
+print("")
+print("///////////////////////////////////////////////////////////////////////////////////////////")
+print("")
+
+#Get primary language of popular repositories.
+result = run_query(queryPrimaryLanguageRepositories)
+
+Repository = result["data"]["search"]["nodes"]
+print("Repositories with number of releases")
+for date in Repository:
+  print(date)
+
+
+
+
