@@ -1,6 +1,6 @@
 import requests
 
-headers = {"Authorization": "bearer <your git token>"}
+headers = {"Authorization": "bearer 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"}
 
 
 def run_query(query):
@@ -158,11 +158,11 @@ print_query_result(run_query(query_primary_language_repositories))
 print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
 # Get closed issues count of popular repositories.
-print("Repositories with primary language")
+print("Repositories with count of closed issues")
 print_query_result(run_query(query_closed_issues_from_repositories))
 print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
 
 # Get total issues count of popular repositories.
-print("Repositories with primary language")
+print("Repositories with count of issues")
 print_query_result(run_query(query_issues_from_repositories))
 print("\n///////////////////////////////////////////////////////////////////////////////////////////\n")
