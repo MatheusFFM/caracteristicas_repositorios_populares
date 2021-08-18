@@ -1,6 +1,6 @@
 import requests
 
-headers = {"Authorization": "bearer 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"}
+headers = {"Authorization": "bearer <your git token>"}
 
 
 def run_query(query):
