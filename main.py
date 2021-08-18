@@ -1,6 +1,6 @@
 import requests
 
-headers = {"Authorization": "bearer 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"}
+headers = {"Authorization": "bearer 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"}
 
 
 def run_query(query):
@@ -19,7 +19,7 @@ def print_query_result(query_result):
 
 defaultQuery = """
 {
-  search(query:"stars", type:REPOSITORY, first:100){
+  search(query:"stars>:100", type:REPOSITORY, first:100){
      nodes {
          ... on Repository {
              nameWithOwner
@@ -31,7 +31,7 @@ defaultQuery = """
 
 queryOldRepositories = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -44,7 +44,7 @@ queryOldRepositories = """
 
 queryContributionsRepositories = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -59,7 +59,7 @@ queryContributionsRepositories = """
 
 queryReleasesRepositories = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars:>100", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -72,24 +72,10 @@ queryReleasesRepositories = """
 }
 """
 
-queryReleasesRepositories = """
-{
-  search(query: "stars", type: REPOSITORY, first: 100) {
-    nodes {
-      ... on Repository {
-        nameWithOwner
-        releases{
-          totalCount
-        }
-      }
-    }
-  }
-}
-"""
 
 queryLastUpdateRepositories = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars>:100", type: REPOSITORY, first: 100) {
   nodes {
       ... on Repository {
         nameWithOwner
@@ -102,7 +88,7 @@ queryLastUpdateRepositories = """
 
 queryPrimaryLanguageRepositories = """
 {
-  search(query: "stars", type: REPOSITORY, first: 100) {
+  search(query: "stars>:100", type: REPOSITORY, first: 100) {
     nodes {
       ... on Repository {
         nameWithOwner
@@ -115,20 +101,6 @@ queryPrimaryLanguageRepositories = """
 }
 """
 
-queryPrimaryLanguageRepositories = """
-{
-  search(query: "stars", type: REPOSITORY, first: 100) {
-    nodes {
-      ... on Repository {
-        nameWithOwner
-        primaryLanguage{
-          name
-        }
-      }
-    }
-  }
-}
-"""
 
 # Get created date of popular repositories.
 print("Repositories with its created date.")
