@@ -1,6 +1,6 @@
 import requests
 
-headers = {"Authorization": "bearer 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"}
+headers = {"Authorization": "bearer <your token>"}
 
 
 def run_query(after):
