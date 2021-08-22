@@ -1,7 +1,7 @@
 import requests
 from datetime import date
 
-headers = {"Authorization": "bearer <your API token>"}
+headers = {"Authorization": "bearer <Your Token API>"}
 
 
 def run_query(after):
@@ -67,7 +67,7 @@ def save_on_file(query_result):
         delta_created = today - created_at
         delta_updated = today - last_update
         name = rf["nameWithOwner"]
-        age = delta_created.days
+        age_in_days = delta_created.days
         total_pr_accepteds = rf["pullRequests"]["totalCount"]
         total_releases = rf["releases"]["totalCount"]
         last_updated_interval = delta_updated.days
