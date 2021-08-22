@@ -1,6 +1,7 @@
 import requests
+from datetime import date
 
-headers = {"Authorization": "bearer <your token>"}
+headers = {"Authorization": "bearer <your API token>"}
 
 
 def run_query(after):
@@ -54,12 +55,33 @@ def print_query_result(query_result):
         print(rf)
 
 
+def save_on_file(query_result):
+    result_format = query_result["data"]["search"]["nodes"]
+    for rf in result_format:
+        today = date.today()
+        total_issues = rf["open"]["totalCount"] + rf["closed"]["totalCount"]
+        if total_issues == 0:
+            total_issues = 1
+        created_at = date.fromisoformat(rf["createdAt"][0:10])
+        last_update = date.fromisoformat(rf["updatedAt"][0:10])
+        delta_created = today - created_at
+        delta_updated = today - last_update
+        name = rf["nameWithOwner"]
+        age = delta_created.days
+        total_pr_accepteds = rf["pullRequests"]["totalCount"]
+        total_releases = rf["releases"]["totalCount"]
+        last_updated_interval = delta_updated.days
+        primary_language = "" if rf["primaryLanguage"] is None else rf["primaryLanguage"]["name"]
+        closed_issues_ratio = rf["closed"]["totalCount"] / total_issues
+
+
 pages = 10
 afterCode = None
 for page in range(pages):
-    print(f"\n========== Page {page+1} ==========\n")
+    print(f"\n========== Page {page + 1} ==========\n")
     result = run_query(afterCode)
     print_query_result(result)
+    save_on_file(result)
     has_next = result["data"]["search"]["pageInfo"]["hasNextPage"]
     if not has_next:
         break
