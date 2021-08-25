@@ -2,7 +2,7 @@ import requests
 import csv
 from datetime import date
 
-headers = {"Authorization": "bearer <Your API Token>"}
+headers = {"Authorization": "bearer <Your Git API Token"}
 
 
 def run_query(after):
@@ -61,8 +61,10 @@ def save_on_file(query_result, writer):
     for rf in result_format:
         today = date.today()
         total_issues = rf["open"]["totalCount"] + rf["closed"]["totalCount"]
+        closed_issues = rf["closed"]["totalCount"]
         if total_issues == 0:
             total_issues = 1
+            closed_issues = 1
         created_at = date.fromisoformat(rf["createdAt"][0:10])
         last_update = date.fromisoformat(rf["updatedAt"][0:10])
         delta_created = today - created_at
@@ -73,7 +75,7 @@ def save_on_file(query_result, writer):
         total_releases = rf["releases"]["totalCount"]
         last_updated_interval = delta_updated.days
         primary_language = "" if rf["primaryLanguage"] is None else rf["primaryLanguage"]["name"]
-        closed_issues_ratio = rf["closed"]["totalCount"] / total_issues
+        closed_issues_ratio = closed_issues / total_issues
         data = [name, age_in_days, total_pr_accepts, total_releases,
                 last_updated_interval, primary_language, closed_issues_ratio]
         writer.writerow(data)
