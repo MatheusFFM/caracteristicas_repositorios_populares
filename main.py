@@ -2,7 +2,7 @@ import requests
 import csv
 from datetime import date
 
-headers = {"Authorization": "bearer <Your Git API Token"}
+headers = {"Authorization": "bearer <Your Git API Token>"}
 
 
 def run_query(after):
@@ -74,6 +74,8 @@ def save_on_file(query_result, writer):
         total_pr_accepts = rf["pullRequests"]["totalCount"]
         total_releases = rf["releases"]["totalCount"]
         last_updated_interval = delta_updated.days
+        if last_updated_interval < 0:
+            last_updated_interval = 0
         primary_language = "" if rf["primaryLanguage"] is None else rf["primaryLanguage"]["name"]
         closed_issues_ratio = closed_issues / total_issues
         data = [name, age_in_days, total_pr_accepts, total_releases,
