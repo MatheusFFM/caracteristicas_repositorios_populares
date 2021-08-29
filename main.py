@@ -1,8 +1,9 @@
 import requests
 import csv
-from datetime import date
+import math
+from datetime import date, datetime
 
-headers = {"Authorization": "bearer <Your Git API Token>"}
+headers = {"Authorization": "bearer <Your GitHub API Token>"}
 
 
 def run_query(after):
@@ -60,24 +61,20 @@ def save_on_file(query_result, writer):
     result_format = query_result["data"]["search"]["nodes"]
     for rf in result_format:
         today = date.today()
+        today_with_minutes = datetime.utcnow()
         total_issues = rf["open"]["totalCount"] + rf["closed"]["totalCount"]
         closed_issues = rf["closed"]["totalCount"]
-        if total_issues == 0:
-            total_issues = 1
-            closed_issues = 1
         created_at = date.fromisoformat(rf["createdAt"][0:10])
-        last_update = date.fromisoformat(rf["updatedAt"][0:10])
+        last_update = datetime.strptime(rf["updatedAt"], "%Y-%m-%dT%H:%M:%SZ")
         delta_created = today - created_at
-        delta_updated = today - last_update
+        delta_updated = today_with_minutes - last_update
         name = rf["nameWithOwner"]
         age_in_days = delta_created.days
         total_pr_accepts = rf["pullRequests"]["totalCount"]
         total_releases = rf["releases"]["totalCount"]
-        last_updated_interval = delta_updated.days
-        if last_updated_interval < 0:
-            last_updated_interval = 0
+        last_updated_interval = math.modf(delta_updated.seconds / 60)[1]
         primary_language = "" if rf["primaryLanguage"] is None else rf["primaryLanguage"]["name"]
-        closed_issues_ratio = closed_issues / total_issues
+        closed_issues_ratio = None if total_issues == 0 else round(closed_issues / total_issues, 2)
         data = [name, age_in_days, total_pr_accepts, total_releases,
                 last_updated_interval, primary_language, closed_issues_ratio]
         writer.writerow(data)
@@ -86,7 +83,7 @@ def save_on_file(query_result, writer):
 pages = 10
 afterCode = None
 header = ['Name', 'Age', 'Total PR Accepts', 'Total Releases',
-          'Last Updated Interval', 'Language', 'Closed Issues Ratio']
+          'Last Updated Interval in Minutes', 'Language', 'Closed Issues Ratio']
 f = open('repositories.csv', 'w')
 w = csv.writer(f)
 w.writerow(header)
